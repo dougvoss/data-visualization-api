@@ -1,8 +1,8 @@
-const User = require('../models/User');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
+const User = require('../models/User');
 const authConfig = require('../config/auth');
 
 
@@ -18,7 +18,7 @@ module.exports = {
         try {
             const users = await User.find();
 
-            return res.json({ result: 'Success', users });
+            return res.json({ users });
         } catch (err) {
             res.status(400).send({ error: 'Error loading users' })
         }
@@ -27,13 +27,13 @@ module.exports = {
         try {
             const users = await User.findById(req.params.userId);
 
-            return res.json({ result: 'Success', users });
+            return res.json({ users });
         } catch (err) {
             res.status(400).send({ error: 'Error find user' })
         }
     },
     async create(req, res) {
-        const { email } = req.body;
+        const { userName, email } = req.body;
         try {
             if (await User.findOne({ email })) {
                 return res.status(400).send({ error: 'User already exists' })
@@ -44,7 +44,6 @@ module.exports = {
             user.password = undefined;
 
             return res.send({
-                result: 'Success',
                 user,
                 token: generateToken({ id: user.id })
             })
@@ -54,8 +53,6 @@ module.exports = {
     },
     async update(req, res) {
         try {
-            const { name, email, password } = req.body;
-
             let user = await User.findById(req.params.userId);
 
             if (!user) {
@@ -64,11 +61,7 @@ module.exports = {
 
             user = await User.findByIdAndUpdate(
                 req.params.userId,
-                {
-                    name,
-                    email,
-                    password
-                },
+                req.body,
                 {
                     new: true
                 })
@@ -76,7 +69,6 @@ module.exports = {
             user.password = undefined;
 
             return res.send({
-                result: 'Success',
                 user,
                 token: generateToken({ id: user.id })
             })
@@ -93,7 +85,7 @@ module.exports = {
 
             await User.findByIdAndRemove(userId);
 
-            return res.send({ result: 'Success', })
+            return res.send()
         } catch (err) {
             res.status(400).send({ error: 'Error deleting user' })
         }

@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     phoneNumber: {
-        type: Number
+        type: String
     },
     age: {
         type: Number
@@ -67,7 +67,7 @@ const UserSchema = new mongoose.Schema({
         description: {
             type: String
         },
-        phone: {
+        phoneNumber: {
             type: String
         },
         email: {

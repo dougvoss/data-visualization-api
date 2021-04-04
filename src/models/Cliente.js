@@ -1,4 +1,4 @@
-var db = require('../config/dbconnection'); //reference of dbconnection.js
+var db = require('../config/dbconnection'); 
 
 var TABELA = 'cliente',
     COD =                   'cod',
